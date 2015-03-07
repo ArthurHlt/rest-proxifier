@@ -1,0 +1,5 @@
+proxyfy:
+  - api: http://example.com
+    route: /api
+admin-ui: false
+admin-ui-root: /admin

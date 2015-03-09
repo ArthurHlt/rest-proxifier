@@ -37,8 +37,6 @@ class Asset implements ExtensionInterface
     public function getAsset($asset)
     {
         $assetPath = $this->dir . $asset;
-        $assetPath = str_replace(dirname($_SERVER['SCRIPT_NAME']), '', $assetPath);
-
         return $this->httpName . $assetPath;
     }
 

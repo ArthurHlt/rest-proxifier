@@ -133,7 +133,7 @@ class DatabaseConnector
             self::DBTYPE_PG,
             self::DBTYPE_SQLITE
         ]);
-        $dbService = CfHelper::getInstance()->getServiceManager()->getService('(db|database|(' . $dbToFind . '))');
+        $dbService = CfHelper::getInstance()->getServiceManager()->getService('.*(db|database|(' . $dbToFind . ')).*');
         if ($dbService == null) {
             return;
         }

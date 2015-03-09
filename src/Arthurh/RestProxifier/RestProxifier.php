@@ -13,7 +13,6 @@ use Arthurh\RestProxifier\Ui\Ui;
 use League\Route\Http\Exception\NotFoundException;
 use League\Route\RouteCollection;
 use orange\cfhelper\CfHelper;
-use Proxy\Factory;
 use Proxy\Proxy;
 use Proxy\Response\Filter\RemoveEncodingFilter;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,7 +66,8 @@ class RestProxifier
 
     public function __construct($configFolder = null)
     {
-        $this->proxy = Factory::create();
+
+        $this->proxy = new Proxy(new AdapterProxy());
         $this->proxy->addResponseFilter(new RemoveEncodingFilter());
         $this->request = Request::createFromGlobals();
     }

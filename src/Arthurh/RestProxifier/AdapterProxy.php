@@ -25,7 +25,7 @@ class AdapterProxy extends GuzzleAdapter
     {
         $this->client = $client ?: new Client([
             'defaults' => [
-                'verify' => __DIR__ . '/../../../assets/cert/cacert.pem'
+                'verify' => false
             ]
         ]);
         $this->messageFactory = $messageFactory ?: new MessageFactory();
@@ -34,9 +34,13 @@ class AdapterProxy extends GuzzleAdapter
 
     public function send(Request $request, $url)
     {
-
-        var_dump($this->client->getDefaultOption());
         $guzzleRequest = $this->convertRequest($request);
+
+        $guzzleRequest->getConfig()->add('curl', [
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false
+        ]);
+        $guzzleRequest->getConfig()->add('decode_content', 1);
 
         $guzzleRequest->setUrl($url);
 

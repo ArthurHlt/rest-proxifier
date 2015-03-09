@@ -14,7 +14,7 @@ restProxifier:
     cache:
       ref: cache
 admin.ui:
-  class: Arthurh\RestProxifier\Ui\ui
+  class: Arthurh\RestProxifier\Ui\Ui
   properties:
     routes:
       yml: admin-route.yml

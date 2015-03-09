@@ -21,6 +21,9 @@ class Asset implements ExtensionInterface
         }
         $port = "";
         $servername = dirname($_SERVER['SCRIPT_NAME']);
+        if ($servername == '/') {
+            $servername = null;
+        }
         if (!($_SERVER['SERVER_PORT'] == 80 && $_SERVER["REQUEST_SCHEME"] == 'http') &&
             !($_SERVER['SERVER_PORT'] == 443 && $_SERVER["REQUEST_SCHEME"] == 'https')
         ) {

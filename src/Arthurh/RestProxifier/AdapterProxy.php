@@ -14,14 +14,34 @@ namespace Arthurh\RestProxifier;
 
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Message\MessageFactory;
 use GuzzleHttp\Message\MessageFactoryInterface;
 use Proxy\Adapter\Guzzle\GuzzleAdapter;
+use Symfony\Component\HttpFoundation\Request;
 
 class AdapterProxy extends GuzzleAdapter
 {
     public function __construct(Client $client = null, MessageFactoryInterface $messageFactory = null)
     {
-        parent::__construct($client, $messageFactory);
-        $this->client->setDefaultOption('verify', false);
+        $this->client = $client ?: new Client([
+            'defaults' => [
+                'verify' => __DIR__ . '/../../../assets/cert/cacert.pem'
+            ]
+        ]);
+        $this->messageFactory = $messageFactory ?: new MessageFactory();
+
+    }
+
+    public function send(Request $request, $url)
+    {
+
+        var_dump($this->client->getDefaultOption());
+        $guzzleRequest = $this->convertRequest($request);
+
+        $guzzleRequest->setUrl($url);
+
+        $guzzleResponse = $this->client->send($guzzleRequest);
+
+        return $this->convertResponse($guzzleResponse);
     }
 }

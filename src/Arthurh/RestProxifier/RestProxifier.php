@@ -97,7 +97,11 @@ class RestProxifier
         if (!$cfHelper->isInCloudFoundry()) {
             return;
         }
-        $proxies = $cfHelper->getServiceManager()->getService('.*proxy.*')->getValues();
+        $serviceProxy = $cfHelper->getServiceManager()->getService('.*proxy.*');
+        if (empty($serviceProxy)) {
+            return;
+        }
+        $proxies = $serviceProxy->getValues();
         $proxiesFinal = [];
         foreach ($proxies as $proxy) {
             $proxy['from'] = 'cfservice';

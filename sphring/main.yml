@@ -40,6 +40,8 @@ platesExtensionRoute:
   properties:
     ui:
       ref: admin.ui
+    config:
+      ref: config
 config:
   class: Arthurh\RestProxifier\Config
 databaseConnector:

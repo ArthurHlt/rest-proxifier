@@ -23,6 +23,11 @@ class MainController extends AbstractController
             $error = $_SESSION['error'];
         }
         unset($_SESSION['error']);
-        return $this->getEngine()->render('main/main.php', ['proxies' => $this->getProxies(), 'error' => $error]);
+        $connection = $this->getRoutesDao()->getDatabaseConnector()->getConnexion();
+        return $this->getEngine()->render('main/main.php', [
+            'proxies' => $this->getProxies(),
+            'error' => $error,
+            'asDb' => !empty($connection)
+        ]);
     }
 }

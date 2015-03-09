@@ -62,14 +62,12 @@ This part is only for people who use the Cloud Foundry PaaS.
 
 You can create a service which contain `proxy` (use regex to find service) in his name with this json value for example:
 ```json
-{
-    [
-        {
-          "api": "http://example.com",
-          "route": "/api"
-        }
-    ]
-}
+[
+    {
+      "api": "http://example.com",
+      "route": "/api"
+    }
+]
 ```
 And rest-proxifier will auto-bind to this service
 

@@ -1,5 +1,13 @@
 proxyfy:
   - api: http://example.com
     route: /api
-admin-ui: false
-admin-ui-root: /admin
+    #this is optionnal
+    #request-header:
+    #  header-key: header-value
+    #response-header:
+    #  header-key: header-value
+    #response-content: ~
+admin-ui: true #set to false to remove admin interface
+admin-ui-root: /admin #path to admin ui
+caching-time: 20 minutes #set to false to remove caching
+database: false #or uri to database, e.g: mysql://root:password@localhost/mydb or special uri for sqlite: sqlite:/path, this is optionnal

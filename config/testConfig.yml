@@ -1,0 +1,1 @@
+database: mysql://root:123@localhost/restproxifier

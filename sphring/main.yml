@@ -1,0 +1,68 @@
+restProxifier:
+  class: Arthurh\RestProxifier\RestProxifier
+  properties:
+    router:
+      ref: router
+    ui:
+      ref: admin.ui
+    config:
+      ref: config
+    databaseConnector:
+      ref: databaseConnector
+    routesDao:
+      ref: routesDao
+    cache:
+      ref: cache
+admin.ui:
+  class: Arthurh\RestProxifier\Ui\ui
+  properties:
+    routes:
+      yml: admin-route.yml
+    templateEngine:
+      ref: templateEngine
+    config:
+      ref: config
+    routesDao:
+      ref: routesDao
+router:
+  class: League\Route\RouteCollection
+templateEngine:
+  class: Arthurh\RestProxifier\Ui\TemplateEngine
+  properties:
+    extensionPlate:
+      ref:
+        asset: platesExtensionAsset
+        route: platesExtensionRoute
+platesExtensionAsset:
+  class: Arthurh\RestProxifier\Ui\PlatesExtension\Asset
+platesExtensionRoute:
+  class: Arthurh\RestProxifier\Ui\PlatesExtension\RoutePlates
+  properties:
+    ui:
+      ref: admin.ui
+config:
+  class: Arthurh\RestProxifier\Config
+databaseConnector:
+  class: Arthurh\RestProxifier\DatabaseConnector
+  properties:
+    config:
+      ref: config
+routesDao:
+  class: Arthurh\RestProxifier\Dao\RoutesDao
+  properties:
+    databaseConnector:
+      ref: databaseConnector
+cache:
+  class: Arthurh\RestProxifier\Cache
+  properties:
+    driver:
+      ref: driverCache
+    pool:
+      ref: cachePool
+cachePool:
+  class: Stash\Pool
+  properties:
+    driver:
+      ref: driverCache
+driverCache:
+  class: Stash\Driver\FileSystem

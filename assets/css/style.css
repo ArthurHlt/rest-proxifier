@@ -1,0 +1,27 @@
+body {
+    padding-top: 50px;
+}
+
+.starter-template {
+    padding: 40px 15px;
+
+}
+
+.starter-template .controls {
+    float: right;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.starter-template .controls {
+    float: right;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.starter-template .addEditProxy {
+    width: 500px;
+    display: none;
+}

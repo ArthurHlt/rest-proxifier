@@ -1,0 +1,15 @@
+index:
+  route: ""
+  controller: !! Arthurh.RestProxifier.Ui.Controller.MainController()
+showEdit:
+  route: "/edit{route:.*}"
+  controller: !! Arthurh.RestProxifier.Ui.Controller.ShowEditController()
+deleteEdit:
+  route: "/delete{route:.*}"
+  controller: !! Arthurh.RestProxifier.Ui.Controller.DeleteController()
+add:
+  route: "/add"
+  controller: !! Arthurh.RestProxifier.Ui.Controller.AddController()
+edit:
+  route: "/routeedit"
+  controller: !! Arthurh.RestProxifier.Ui.Controller.EditController()

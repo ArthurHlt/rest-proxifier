@@ -4,3 +4,4 @@ config/testConfig.yml
 *.sqlite
 .idea/
 cache/
+logs/

@@ -48,6 +48,7 @@ admin-ui: true #set to false to remove admin interface
 admin-ui-root: /admin #path to admin ui
 rewriting: false #set to true if you use rewriting to point directly on index.php
 caching-time: 20 minutes #set to false to remove caching
+log-request: true #set to false to stop logs user request to proxify
 database: false #or uri to database, e.g: mysql://root:password@localhost/mydb or special uri for sqlite: sqlite:/path, this is optionnal
 ```
 This file can be rewrite in `json` or in `xml` too, it uses this dependency [noodlehaus/config](https://github.com/noodlehaus/config) so follow schemas from this dependency if you don't want use yaml.

@@ -17,6 +17,7 @@ use Proxy\Proxy;
 use Proxy\Response\Filter\RemoveEncodingFilter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use VectorFace\Whip\Whip;
 
 class RestProxifier
 {
@@ -58,11 +59,16 @@ class RestProxifier
      */
     private $cache;
 
+    /**
+     * @var Logger
+     */
+    private $logger;
     public static $NO_CACHING = [
         "PUT",
         "DELETE",
         "POST"
     ];
+    const SENTENCELOG = "User with ip '%s' ask for the page: '%s'. Resquest detail after.";
 
     public function __construct($configFolder = null)
     {
@@ -128,11 +134,28 @@ class RestProxifier
                 $request = $restProxifier->getRequest();
                 $itemName = $request->getMethod() . '/' . md5($request->getUri());
                 $item = null;
+                $toUri = $proxyElem['api'] . $args['pathApi'];
+
+                $cachingTime = $restProxifier->getConfig()->get('caching-time', '10 minutes');
+                $cachingTimeInSecond = 0;
+                if (!empty($cachingTime)) {
+                    $cachingTimeInSecond = strtotime('+' . $cachingTime, 0);
+                }
+
+                $whip = new Whip();
+                $userIp = $whip->getIpAddress();
+                $userIp = ($userIp === false) ? $_SERVER['REMOTE_ADDR'] : $userIp;
+                if ($restProxifier->getConfig()->get('log-request', true)) {
+                    $restProxifier->getLogger()->addNotice(sprintf(RestProxifier::SENTENCELOG, $userIp, $toUri));
+                    $restProxifier->getLogger()->addNotice($restProxifier->getRequest()->__toString());
+                }
+
                 if (!in_array($request->getMethod(), RestProxifier::$NO_CACHING)) {
                     $item = $restProxifier->getCache()->getPool()->getItem($itemName);
                     $data = $item->get();
-
                     if (!$item->isMiss()) {
+                        $restProxifier->injectCorsByPass($restProxifier->getRequest(), $data, $cachingTimeInSecond);
+
                         return $data;
                     }
                 }
@@ -141,29 +164,43 @@ class RestProxifier
                     $restProxifier->getRequest()->headers->add($proxyElem['request-header']);
                 }
 
-                $response = $restProxifier->getProxy()->forward($restProxifier->getRequest())->to($proxyElem['api'] . $args['pathApi']);
+                $response = $restProxifier->getProxy()->forward($restProxifier->getRequest())->to($toUri);
                 if (!empty($proxyElem['response-content'])) {
                     $response->setContent($proxyElem['response-content']);
                 }
                 if (!empty($proxyElem['response-header'])) {
-                    $restProxifier->getRequest()->headers->add($proxyElem['response-header']);
+                    $response->headers->add($proxyElem['response-header']);
                 }
+                $restProxifier->injectCorsByPass($restProxifier->getRequest(), $response, $cachingTimeInSecond);
 
-                $response->headers->add(array(
-                    'Access-Control-Allow-Origin' => '*',
-                    'Access-Control-Allow-Methods' => 'POST, GET, OPTIONS, DELETE, PUT',
-                    'Access-Control-Allow-Headers' => 'x-requested-with'
-                ));
                 if (!in_array($request->getMethod(), RestProxifier::$NO_CACHING)) {
-                    $cachingTime = $restProxifier->getConfig()->get('caching-time', '10 minutes');
-                    if (empty($cachingTime)) {
+                    if (empty($cachingTimeInSecond)) {
                         return $response;
                     }
-                    $cachingTimeInSecond = strtotime('+' . $cachingTime, 0);
                     $item->set($response, $cachingTimeInSecond);
                 }
+
                 return $response;
             });
+        }
+    }
+
+    public function injectCorsByPass(Request $request, Response $response, $cachingTimeInSecond = 0)
+    {
+        $response->headers->add(array(
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Credentials' => 'true'
+        ));
+        $requestMethod = $request->headers->get('Access-Control-Request-Method');
+        $requestHeaders = $request->headers->get('Access-Control-Request-Method');
+        if (!empty($requestMethod)) {
+            $response->headers->add(['Access-Control-Allow-Methods' => $requestMethod]);
+        }
+        if (!empty($requestHeaders)) {
+            $response->headers->add(['Access-Control-Allow-Headers' => $requestHeaders]);
+        }
+        if (!empty($cachingTimeInSecond)) {
+            $response->headers->add(['Access-Control-Max-Age' => $cachingTimeInSecond]);
         }
     }
 
@@ -329,6 +366,23 @@ class RestProxifier
     public function setCache(Cache $cache)
     {
         $this->cache = $cache;
+    }
+
+    /**
+     * @return Logger
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * @param Logger $logger
+     * @Required
+     */
+    public function setLogger(Logger $logger)
+    {
+        $this->logger = $logger;
     }
 
 

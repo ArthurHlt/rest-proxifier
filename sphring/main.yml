@@ -13,6 +13,8 @@ restProxifier:
       ref: routesDao
     cache:
       ref: cache
+    logger:
+      ref: logger
 admin.ui:
   class: Arthurh\RestProxifier\Ui\Ui
   properties:
@@ -68,3 +70,5 @@ cachePool:
       ref: driverCache
 driverCache:
   class: Stash\Driver\FileSystem
+logger:
+  class: Arthurh\RestProxifier\Logger

@@ -92,4 +92,4 @@ You can also create a database service which should contains at least one of the
   - `pgsql`
   - `maria`
 
-And rest-proxifier will auto-bind database to this service
+And rest-proxifier will auto-bind database from this service

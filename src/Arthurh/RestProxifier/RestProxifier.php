@@ -192,7 +192,7 @@ class RestProxifier
             'Access-Control-Allow-Credentials' => 'true'
         ));
         $requestMethod = $request->headers->get('Access-Control-Request-Method');
-        $requestHeaders = $request->headers->get('Access-Control-Request-Method');
+        $requestHeaders = $request->headers->get('Access-Control-Request-Headers');
         if (!empty($requestMethod)) {
             $response->headers->add(['Access-Control-Allow-Methods' => $requestMethod]);
         }

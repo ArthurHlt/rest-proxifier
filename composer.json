@@ -15,8 +15,8 @@
   ],
   "homepage": "https://github.com/ArthurHlt/rest-proxifier",
   "require": {
-    "hassankhan/proxy": "~2.2",
-    "noodlehaus/config": "0.7.*",
+    "jenssegers/proxy": "~2.2",
+    "hassankhan/config": "0.7.*",
     "orange-opensource/cf-helper-php": "1.3.1",
     "league/route": "~1.1",
     "league/plates": "~3.1",
